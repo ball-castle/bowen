@@ -1,64 +1,85 @@
-import Image from "next/image";
+import {
+  Sparkles,
+} from "lucide-react";
 
-export default function Home() {
+import { ExhibitionGallery } from "@/components/exhibition-gallery";
+import { UploadPanel } from "@/components/upload-panel";
+import { Badge } from "@/components/ui/badge";
+import { readGalleryEntries } from "@/lib/gallery";
+
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const entries = await readGalleryEntries();
+  const photoCount = entries.reduce((total, entry) => total + entry.images.length, 0);
+  const venueCount = new Set(
+    entries.map((entry) => entry.venue.trim()).filter(Boolean),
+  ).size;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="relative isolate min-h-screen overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -z-20 bg-[linear-gradient(120deg,rgba(255,255,255,0.35),transparent_38%),linear-gradient(180deg,rgba(255,255,255,0.18),transparent_72%)]" />
+      <div className="pointer-events-none absolute left-[-12%] top-[-8%] -z-10 h-72 w-72 rounded-full bg-amber-200/40 blur-3xl sm:h-96 sm:w-96" />
+      <div className="pointer-events-none absolute bottom-[-12%] right-[-10%] -z-10 h-80 w-80 rounded-full bg-teal-300/30 blur-3xl sm:h-[26rem] sm:w-[26rem]" />
+
+      <main className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+        <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="rounded-[2rem] border border-black/8 bg-white/72 p-6 shadow-[0_24px_90px_-42px_rgba(30,41,59,0.5)] backdrop-blur-xl sm:p-8">
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge className="rounded-full border-0 bg-primary/12 px-4 py-1.5 text-[11px] tracking-[0.24em] text-primary uppercase">
+                Exhibition Upload
+              </Badge>
+              <span className="inline-flex items-center gap-2 text-xs tracking-[0.2em] text-zinc-500 uppercase">
+                <Sparkles className="h-3.5 w-3.5" />
+                Archive
+              </span>
+            </div>
+
+            <div className="mt-8 space-y-5">
+              <div className="space-y-4">
+                <h1 className="max-w-4xl text-5xl leading-[0.92] font-semibold tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl [font-family:var(--font-editorial)]">
+                  展览照片上传与归档
+                </h1>
+                <p className="max-w-xl text-base leading-8 text-zinc-600 sm:text-lg">
+                  上传图片，整理批次，直接在首页查看。
+                </p>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-[1.6rem] border border-white/60 bg-white/70 p-4 backdrop-blur">
+                  <p className="text-xs tracking-[0.22em] text-zinc-500 uppercase">
+                    批次
+                  </p>
+                  <p className="mt-3 text-3xl font-semibold text-zinc-900">
+                    {entries.length}
+                  </p>
+                </div>
+                <div className="rounded-[1.6rem] border border-white/60 bg-white/70 p-4 backdrop-blur">
+                  <p className="text-xs tracking-[0.22em] text-zinc-500 uppercase">
+                    照片
+                  </p>
+                  <p className="mt-3 text-3xl font-semibold text-zinc-900">
+                    {photoCount}
+                  </p>
+                </div>
+                <div className="rounded-[1.6rem] border border-white/60 bg-white/70 p-4 backdrop-blur">
+                  <p className="text-xs tracking-[0.22em] text-zinc-500 uppercase">
+                    场馆
+                  </p>
+                  <p className="mt-3 text-3xl font-semibold text-zinc-900">
+                    {venueCount}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <UploadPanel />
+        </section>
+
+        <section>
+          <ExhibitionGallery entries={entries} />
+        </section>
       </main>
     </div>
   );
