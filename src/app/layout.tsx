@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Geist_Mono, Manrope } from "next/font/google";
+import { Geist_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 
 const bodyFont = Manrope({
@@ -11,12 +11,6 @@ const bodyFont = Manrope({
 const geistMono = Geist_Mono({
   variable: "--font-code",
   subsets: ["latin"],
-});
-
-const displayFont = Cormorant_Garamond({
-  variable: "--font-editorial",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -31,9 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body
-        className={`${bodyFont.variable} ${displayFont.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${bodyFont.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>

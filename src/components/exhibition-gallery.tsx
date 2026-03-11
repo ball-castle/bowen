@@ -18,29 +18,29 @@ type ExhibitionGalleryProps = {
 
 export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
   return (
-    <section className="space-y-5">
+    <section className="space-y-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs tracking-[0.24em] text-zinc-500 uppercase">
+          <p className="text-[11px] tracking-[0.24em] text-zinc-500 uppercase">
             Gallery
           </p>
-          <h2 className="text-3xl text-zinc-900 [font-family:var(--font-editorial)] sm:text-4xl">
+          <h2 className="text-[2rem] font-semibold tracking-[-0.03em] text-zinc-950 sm:text-[2.35rem]">
             展览图片墙
           </h2>
         </div>
         <p className="max-w-xl text-sm leading-7 text-zinc-600">
-          最新上传排在最前面。
+          以批次形式展示，最新上传排在最前面。
         </p>
       </div>
 
       {!entries.length ? (
-        <Card className="rounded-[2rem] border border-dashed border-black/10 bg-white/65 py-10 backdrop-blur">
+        <Card className="rounded-[1.8rem] border border-dashed border-black/10 bg-white/70 py-10 backdrop-blur">
           <CardContent className="flex flex-col items-center gap-4 px-6 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
               <ImageIcon className="h-7 w-7" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl text-zinc-900 [font-family:var(--font-editorial)]">
+              <h3 className="text-xl font-semibold tracking-[-0.02em] text-zinc-950">
                 还没有上传记录
               </h3>
               <p className="max-w-md text-sm leading-7 text-zinc-600">
@@ -59,11 +59,11 @@ export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
             return (
               <Card
                 key={entry.id}
-                className="rounded-[2rem] border border-black/8 bg-white/78 py-0 shadow-[0_22px_80px_-50px_rgba(15,23,42,0.35)] backdrop-blur-xl"
+                className="rounded-[1.8rem] border border-black/8 bg-white/82 py-0 shadow-[0_24px_84px_-56px_rgba(15,23,42,0.36)] backdrop-blur-xl"
               >
-                <CardHeader className="gap-4 px-6 pt-6">
+                <CardHeader className="gap-4 px-5 pt-5 sm:px-6 sm:pt-6">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge className="rounded-full border-0 bg-primary/12 px-3 py-1 text-[11px] tracking-[0.18em] text-primary uppercase">
+                    <Badge className="rounded-full border-0 bg-primary/10 px-3 py-1 text-[11px] tracking-[0.18em] text-primary uppercase">
                       {entry.exhibitionDate
                         ? formatDateLabel(entry.exhibitionDate)
                         : "展期待定"}
@@ -79,10 +79,10 @@ export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
                   </div>
 
                   <div className="space-y-3">
-                    <CardTitle className="text-3xl leading-tight text-zinc-900 [font-family:var(--font-editorial)]">
+                    <CardTitle className="text-[1.65rem] leading-[1.15] font-semibold tracking-[-0.03em] text-zinc-950">
                       {entry.exhibitionName}
                     </CardTitle>
-                    <CardDescription className="flex flex-wrap gap-4 text-sm text-zinc-500">
+                    <CardDescription className="flex flex-wrap gap-x-4 gap-y-2 text-[13px] text-zinc-500">
                       <span className="inline-flex items-center gap-2">
                         <Clock3 className="h-4 w-4" />
                         {formatDateTimeLabel(entry.createdAt)}
@@ -101,7 +101,7 @@ export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-5 px-6 pb-6">
+                <CardContent className="space-y-4 px-5 pb-5 sm:px-6 sm:pb-6">
                   {entry.curatorNote ? (
                     <p className="text-sm leading-7 text-zinc-600">
                       {entry.curatorNote}
@@ -109,7 +109,7 @@ export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
                   ) : null}
 
                   <div className="grid gap-3 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.85fr)]">
-                    <div className="group relative overflow-hidden rounded-[1.5rem] border border-black/8 bg-zinc-100">
+                    <div className="group relative overflow-hidden rounded-[1.35rem] border border-black/8 bg-zinc-100">
                       <div className="relative aspect-[4/5]">
                         <Image
                           src={heroImage.src}
@@ -131,7 +131,7 @@ export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
                       {secondaryImages.map((image, index) => (
                         <div
                           key={image.id}
-                          className="group relative overflow-hidden rounded-[1.35rem] border border-black/8 bg-zinc-100"
+                          className="group relative overflow-hidden rounded-[1.2rem] border border-black/8 bg-zinc-100"
                         >
                           <div className="relative aspect-[4/3] lg:aspect-[4/2.6]">
                             <Image
@@ -146,7 +146,7 @@ export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
                           <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
 
                           {remainingCount > 0 && index === secondaryImages.length - 1 ? (
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/45 text-xl font-semibold text-white backdrop-blur-[2px]">
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/45 text-lg font-semibold text-white backdrop-blur-[2px]">
                               +{remainingCount}
                             </div>
                           ) : null}
@@ -154,7 +154,7 @@ export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
                       ))}
 
                       {!secondaryImages.length ? (
-                        <div className="flex min-h-40 items-center justify-center rounded-[1.35rem] border border-dashed border-black/10 bg-zinc-50 text-sm text-zinc-500">
+                        <div className="flex min-h-40 items-center justify-center rounded-[1.2rem] border border-dashed border-black/10 bg-zinc-50 text-sm text-zinc-500">
                           仅上传了 1 张主图
                         </div>
                       ) : null}

@@ -197,14 +197,14 @@ export function UploadPanel() {
   }
 
   return (
-    <Card className="rounded-[2rem] border border-black/8 bg-white/78 py-0 shadow-[0_24px_90px_-42px_rgba(15,23,42,0.35)] backdrop-blur-xl">
-      <CardHeader className="gap-3 px-6 pt-6">
+    <Card className="rounded-[1.8rem] border border-black/8 bg-white/82 py-0 shadow-[0_28px_90px_-58px_rgba(15,23,42,0.38)] backdrop-blur-xl">
+      <CardHeader className="gap-3 px-6 pt-6 sm:px-7 sm:pt-7">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs tracking-[0.22em] text-zinc-500 uppercase">
+            <p className="text-[11px] tracking-[0.22em] text-zinc-500 uppercase">
               Upload
             </p>
-            <CardTitle className="mt-2 text-3xl text-zinc-900 [font-family:var(--font-editorial)]">
+            <CardTitle className="mt-2 text-[1.75rem] font-semibold tracking-[-0.03em] text-zinc-950">
               新建上传批次
             </CardTitle>
           </div>
@@ -212,18 +212,18 @@ export function UploadPanel() {
             <Sparkles className="h-5 w-5" />
           </div>
         </div>
-        <CardDescription className="text-sm leading-7 text-zinc-600">
-          填写信息后直接上传图片。
+        <CardDescription className="text-sm leading-6 text-zinc-600">
+          填写基本信息后即可归档这组展览照片。
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="px-6 pb-6">
+      <CardContent className="px-6 pb-6 sm:px-7 sm:pb-7">
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <label
                 htmlFor="exhibition-name"
-                className="text-sm font-medium text-zinc-800"
+                className="text-[13px] font-medium text-zinc-800"
               >
                 展览名称
               </label>
@@ -232,11 +232,12 @@ export function UploadPanel() {
                 placeholder="例如：光的边界"
                 value={exhibitionName}
                 onChange={(event) => setExhibitionName(event.target.value)}
+                className="h-11 rounded-[1rem] border-black/8 bg-white/80 px-4"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="venue" className="text-sm font-medium text-zinc-800">
+              <label htmlFor="venue" className="text-[13px] font-medium text-zinc-800">
                 场馆 / 空间
               </label>
               <Input
@@ -244,6 +245,7 @@ export function UploadPanel() {
                 placeholder="例如：一层主展厅"
                 value={venue}
                 onChange={(event) => setVenue(event.target.value)}
+                className="h-11 rounded-[1rem] border-black/8 bg-white/80 px-4"
               />
             </div>
           </div>
@@ -252,7 +254,7 @@ export function UploadPanel() {
             <div className="space-y-2">
               <label
                 htmlFor="exhibition-date"
-                className="text-sm font-medium text-zinc-800"
+                className="text-[13px] font-medium text-zinc-800"
               >
                 展览日期
               </label>
@@ -261,13 +263,14 @@ export function UploadPanel() {
                 type="date"
                 value={exhibitionDate}
                 onChange={(event) => setExhibitionDate(event.target.value)}
+                className="h-11 rounded-[1rem] border-black/8 bg-white/80 px-4"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="curator-note"
-                className="text-sm font-medium text-zinc-800"
+                className="text-[13px] font-medium text-zinc-800"
               >
                 展览说明
               </label>
@@ -276,7 +279,7 @@ export function UploadPanel() {
                 placeholder="写一点布展、策展或拍摄说明。"
                 value={curatorNote}
                 onChange={(event) => setCuratorNote(event.target.value)}
-                className="min-h-24 resize-none"
+                className="min-h-28 resize-none rounded-[1rem] border-black/8 bg-white/80 px-4 py-3"
               />
             </div>
           </div>
@@ -284,10 +287,10 @@ export function UploadPanel() {
           <label
             htmlFor="file-upload"
             className={cn(
-              "block rounded-[1.6rem] border border-dashed bg-zinc-50/80 p-6 transition",
+              "block rounded-[1.4rem] border border-dashed bg-zinc-50/85 p-5 transition",
               isDragging
-                ? "border-primary bg-primary/6 shadow-[0_0_0_8px_rgba(13,148,136,0.08)]"
-                : "border-black/10 hover:border-primary/50 hover:bg-white",
+                ? "border-primary bg-primary/6 shadow-[0_0_0_6px_rgba(8,145,178,0.08)]"
+                : "border-black/10 hover:border-primary/45 hover:bg-white",
             )}
             onDragEnter={(event) => {
               event.preventDefault();
@@ -319,15 +322,15 @@ export function UploadPanel() {
             />
 
             <div className="flex flex-col items-center gap-4 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Upload className="h-6 w-6" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Upload className="h-5 w-5" />
               </div>
               <div className="space-y-2">
-                <p className="text-base font-semibold text-zinc-900">
+                <p className="text-sm font-semibold text-zinc-900 sm:text-[15px]">
                   拖拽照片到这里，或点击选择文件
                 </p>
-                <p className="text-sm leading-7 text-zinc-600">
-                  支持 JPG、PNG、WEBP、AVIF、GIF。
+                <p className="text-xs leading-6 text-zinc-600">
+                  支持 JPG、PNG、WEBP、AVIF、GIF，单次最多上传 12 张。
                 </p>
               </div>
             </div>
@@ -352,7 +355,7 @@ export function UploadPanel() {
                 {previews.map((preview) => (
                   <div
                     key={preview.id}
-                    className="overflow-hidden rounded-[1.25rem] border border-black/8 bg-white"
+                    className="overflow-hidden rounded-[1.1rem] border border-black/8 bg-white/90"
                   >
                     <div className="relative aspect-[4/3]">
                       <Image
@@ -403,7 +406,7 @@ export function UploadPanel() {
 
           <Button
             type="submit"
-            className="h-12 w-full rounded-full bg-zinc-950 text-base text-white hover:bg-zinc-800"
+            className="h-11 w-full rounded-[1rem] bg-zinc-950 text-sm font-semibold text-white hover:bg-zinc-800"
             disabled={isUploading}
           >
             {isUploading ? (
