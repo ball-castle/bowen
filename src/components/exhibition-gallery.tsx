@@ -13,40 +13,43 @@ type ExhibitionGalleryProps = {
 export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
   const photoCount = entries.reduce((total, entry) => total + entry.images.length, 0);
   const venueCount = new Set(entries.map((entry) => entry.venue.trim()).filter(Boolean)).size;
-  const summaryItems = [
-    { label: "批次", value: entries.length },
-    { label: "照片", value: photoCount },
-    { label: "场馆", value: venueCount },
+  const summaryItems =[
+    { label: "归档批次", value: entries.length },
+    { label: "图片总数", value: photoCount },
+    { label: "记录场馆", value: venueCount },
   ];
 
   return (
-    <section className="space-y-5">
-      <div className="rounded-[1.8rem] border border-black/7 bg-white/78 px-6 py-6 shadow-[0_28px_90px_-72px_rgba(24,34,43,0.32)] backdrop-blur-xl sm:px-8 sm:py-8">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-2">
-            <p className="text-[11px] tracking-[0.24em] text-zinc-500 uppercase">
+    <section className="space-y-8">
+      {/* 顶部数据汇总卡片 */}
+      <div className="relative overflow-hidden rounded-[2rem] border border-border/40 bg-card/60 px-6 py-8 shadow-2xl shadow-primary/5 backdrop-blur-2xl sm:px-10 sm:py-10">
+        <div className="absolute -right-20 -top-20 -z-10 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
+        
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-3">
+            <p className="text-[11px] font-bold tracking-[0.25em] text-primary/80 uppercase">
               Archive Wall
             </p>
-            <div className="flex flex-wrap items-end gap-3">
-              <h2 className="font-[family:var(--font-display)] text-[2.15rem] leading-none font-semibold tracking-[-0.05em] text-zinc-950 sm:text-[2.55rem]">
+            <div className="flex flex-wrap items-end gap-4">
+              <h2 className="font-[family:var(--font-display)] text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
                 展览图片墙
               </h2>
-              <span className="pb-1 text-xs text-zinc-500">
+              <span className="mb-1 rounded-full bg-muted/50 px-3 py-1 text-xs font-medium text-muted-foreground">
                 共 {entries.length} 个批次
               </span>
             </div>
-            <p className="max-w-xl text-[13px] leading-6 text-zinc-500">
-              按上传时间倒序排列，把每次展览的图像与说明整理成一页完整记录。
+            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+              按上传时间倒序排列，把每次展览的图像与说明整理成一页完整记录，留存视觉与空间的记忆。
             </p>
           </div>
 
-          <div className="grid gap-px overflow-hidden rounded-[1.15rem] border border-black/8 bg-black/[0.045] sm:grid-cols-3 lg:w-[20rem]">
+          <div className="grid gap-2 rounded-2xl bg-muted/30 p-2 sm:grid-cols-3 lg:w-[24rem]">
             {summaryItems.map((item) => (
-              <div key={item.label} className="bg-white/76 px-4 py-3">
-                <p className="text-[10px] tracking-[0.18em] text-zinc-500 uppercase">
+              <div key={item.label} className="flex flex-col items-center justify-center rounded-xl bg-background/50 px-4 py-3 text-center shadow-sm transition-transform hover:-translate-y-0.5">
+                <p className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
                   {item.label}
                 </p>
-                <p className="mt-1 text-lg font-semibold tracking-[-0.03em] text-zinc-950">
+                <p className="mt-1.5 text-xl font-bold tracking-tight text-foreground">
                   {item.value}
                 </p>
               </div>
@@ -55,24 +58,26 @@ export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
         </div>
       </div>
 
+      {/* 空状态 */}
       {!entries.length ? (
-        <Card className="rounded-[1.8rem] border border-dashed border-black/10 bg-white/72 py-10 backdrop-blur">
-          <CardContent className="flex flex-col items-center gap-4 px-6 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/8 text-primary">
-              <ImageIcon className="h-6 w-6" />
+        <Card className="rounded-[2rem] border-2 border-dashed border-border/50 bg-card/30 py-16 backdrop-blur-md">
+          <CardContent className="flex flex-col items-center gap-5 px-6 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary shadow-inner">
+              <ImageIcon className="h-8 w-8" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-semibold tracking-[-0.02em] text-zinc-950">
+              <h3 className="text-xl font-bold tracking-tight text-foreground">
                 还没有上传记录
               </h3>
-              <p className="max-w-md text-sm leading-7 text-zinc-600">
-                上传第一组照片后，这里会显示归档内容。
+              <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+                在上方完成第一组照片归档后，这里会立刻生成属于你的展览画廊。
               </p>
             </div>
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-5">
+        /* 列表渲染 */
+        <div className="space-y-8">
           {entries.map((entry) => {
             const heroImage = entry.images[0];
             const secondaryImages = entry.images.slice(1, 4);
@@ -81,43 +86,48 @@ export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
             return (
               <Card
                 key={entry.id}
-                className="rounded-[1.85rem] border border-black/7 bg-white/80 py-0 shadow-[0_30px_96px_-68px_rgba(24,34,43,0.34)] backdrop-blur-xl"
+                className="group/card overflow-hidden rounded-[2rem] border border-border/40 bg-card/60 p-0 shadow-lg shadow-black/5 backdrop-blur-xl transition-all hover:shadow-2xl hover:shadow-primary/5"
               >
                 <CardContent className="p-0">
-                  <div className="grid gap-0 lg:grid-cols-[minmax(0,1.5fr)_minmax(19rem,1fr)]">
-                    <div className="p-4 sm:p-5 lg:p-6">
+                  <div className="grid gap-0 lg:grid-cols-[1.5fr_minmax(20rem,1fr)]">
+                    
+                    {/* 左侧：图片排版区 */}
+                    <div className="p-5 sm:p-6 lg:p-8">
                       <div className="space-y-3">
-                        <div className="group relative overflow-hidden rounded-[1.5rem] border border-black/8 bg-zinc-100">
+                        {/* 主图 Hero Image */}
+                        <div className="group/hero relative overflow-hidden rounded-[1.25rem] border border-border/50 bg-muted/20">
                           <div className="relative aspect-[16/10]">
                             <Image
                               src={heroImage.src}
                               alt={heroImage.alt}
                               fill
                               sizes="(min-width: 1280px) 48vw, (min-width: 1024px) 54vw, 100vw"
-                              className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                              className="object-cover transition-transform duration-700 group-hover/hero:scale-105"
                             />
                           </div>
 
+                          {/* 悬浮标签（为了图片上的可见性，保持深色/毛玻璃背景） */}
                           <div className="absolute left-4 top-4">
-                            <Badge className="rounded-full border-0 bg-black/58 px-3 py-1 text-[11px] tracking-[0.16em] text-white backdrop-blur-sm uppercase">
-                              {entry.images.length} 张图片
+                            <Badge className="rounded-full border-0 bg-black/40 px-3 py-1.5 text-[11px] font-semibold tracking-widest text-white backdrop-blur-md uppercase shadow-sm">
+                              {entry.images.length} Photos
                             </Badge>
                           </div>
 
-                          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 bg-gradient-to-t from-black/62 via-black/12 to-transparent px-4 py-3.5 text-white">
-                            <p className="truncate text-sm">{heroImage.filename}</p>
-                            <span className="text-xs text-white/80">
+                          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 bg-gradient-to-t from-black/80 via-black/30 to-transparent px-5 py-4 text-white opacity-90 transition-opacity group-hover/hero:opacity-100">
+                            <p className="truncate text-sm font-medium">{heroImage.filename}</p>
+                            <span className="text-xs font-mono text-white/80">
                               {formatBytes(heroImage.size)}
                             </span>
                           </div>
                         </div>
 
-                        {secondaryImages.length ? (
+                        {/* 副图 Secondary Images */}
+                        {secondaryImages.length > 0 ? (
                           <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
                             {secondaryImages.map((image, imageIndex) => (
                               <div
                                 key={image.id}
-                                className="group relative overflow-hidden rounded-[1.1rem] border border-black/8 bg-zinc-100"
+                                className="group/sub relative overflow-hidden rounded-[1rem] border border-border/50 bg-muted/20"
                               >
                                 <div className="relative aspect-[4/3]">
                                   <Image
@@ -125,84 +135,82 @@ export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
                                     alt={image.alt}
                                     fill
                                     sizes="(min-width: 1024px) 16vw, 40vw"
-                                    className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                                    className="object-cover transition-transform duration-700 group-hover/sub:scale-110"
                                   />
                                 </div>
 
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-
-                                {remainingCount > 0 &&
-                                imageIndex === secondaryImages.length - 1 ? (
-                                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 text-base font-semibold text-white backdrop-blur-[1.5px]">
+                                {remainingCount > 0 && imageIndex === secondaryImages.length - 1 && (
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-xl font-medium text-white backdrop-blur-sm transition-colors hover:bg-black/40 cursor-pointer">
                                     +{remainingCount}
                                   </div>
-                                ) : null}
+                                )}
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <div className="flex min-h-24 items-center justify-center rounded-[1.1rem] border border-dashed border-black/10 bg-zinc-50 text-sm text-zinc-500">
+                          <div className="flex min-h-24 items-center justify-center rounded-[1rem] border border-dashed border-border/60 bg-muted/10 text-sm font-medium text-muted-foreground">
                             仅上传了 1 张主图
                           </div>
                         )}
                       </div>
                     </div>
 
-                    <div className="flex flex-col border-t border-black/6 px-5 py-5 sm:px-6 sm:py-6 lg:border-t-0 lg:border-l">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge className="rounded-full border-0 bg-primary/8 px-3 py-1 text-[11px] tracking-[0.16em] text-primary uppercase">
+                    {/* 右侧：信息与描述区 */}
+                    <div className="flex flex-col border-t border-border/40 bg-muted/5 px-6 py-6 lg:border-l lg:border-t-0 lg:px-8 lg:py-8">
+                      <div className="flex flex-wrap items-center gap-2.5">
+                        <Badge className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-semibold tracking-widest text-primary uppercase shadow-none">
                           {entry.exhibitionDate
                             ? formatDateLabel(entry.exhibitionDate)
                             : "展期待定"}
                         </Badge>
-                        {entry.venue ? (
+                        {entry.venue && (
                           <Badge
                             variant="outline"
-                            className="rounded-full border-black/8 bg-white/72 px-3 py-1 text-zinc-600"
+                            className="rounded-full border-border/60 bg-background/50 px-3 py-1 text-[11px] font-medium text-muted-foreground shadow-none"
                           >
                             {entry.venue}
                           </Badge>
-                        ) : null}
+                        )}
                       </div>
 
-                      <div className="mt-5">
-                        <CardTitle className="font-[family:var(--font-display)] text-[2rem] leading-[1.02] font-semibold tracking-[-0.05em] text-zinc-950">
+                      <div className="mt-6">
+                        <CardTitle className="font-[family:var(--font-display)] text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                           {entry.exhibitionName}
                         </CardTitle>
                       </div>
 
-                      <div className="mt-5 grid gap-px overflow-hidden rounded-[1.1rem] border border-black/8 bg-black/[0.045] sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                        <div className="bg-white/76 px-3.5 py-3">
-                          <p className="text-[10px] tracking-[0.16em] text-zinc-500 uppercase">
+                      <div className="mt-8 grid gap-2 rounded-2xl bg-muted/30 p-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                        <div className="flex flex-col justify-center rounded-xl bg-background/50 px-3.5 py-3 shadow-sm">
+                          <p className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
                             上传时间
                           </p>
-                          <p className="mt-1 text-sm leading-6 text-zinc-700">
+                          <p className="mt-1 text-sm font-medium text-foreground">
                             {formatDateTimeLabel(entry.createdAt)}
                           </p>
                         </div>
-                        <div className="bg-white/76 px-3.5 py-3">
-                          <p className="text-[10px] tracking-[0.16em] text-zinc-500 uppercase">
+                        <div className="flex flex-col justify-center rounded-xl bg-background/50 px-3.5 py-3 shadow-sm">
+                          <p className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
                             图片数量
                           </p>
-                          <p className="mt-1 text-sm leading-6 text-zinc-700">
+                          <p className="mt-1 text-sm font-medium text-foreground">
                             {entry.images.length} 张
                           </p>
                         </div>
-                        <div className="bg-white/76 px-3.5 py-3">
-                          <p className="text-[10px] tracking-[0.16em] text-zinc-500 uppercase">
+                        <div className="flex flex-col justify-center rounded-xl bg-background/50 px-3.5 py-3 shadow-sm">
+                          <p className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
                             场馆位置
                           </p>
-                          <p className="mt-1 text-sm leading-6 text-zinc-700">
-                            {entry.venue || "未填写场馆"}
+                          <p className="mt-1 truncate text-sm font-medium text-foreground">
+                            {entry.venue || "未填写"}
                           </p>
                         </div>
                       </div>
 
-                      <div className="mt-5 rounded-[1.2rem] border border-black/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.86),rgba(248,245,240,0.8))] px-4 py-4">
-                        <p className="text-[10px] tracking-[0.18em] text-zinc-500 uppercase">
+                      <div className="mt-6 flex-1 rounded-2xl border border-border/50 bg-gradient-to-br from-background/80 to-muted/20 px-5 py-5 shadow-inner">
+                        <p className="text-[10px] font-bold tracking-[0.2em] text-primary/80 uppercase">
                           Curator Note
                         </p>
-                        <p className="mt-3 text-[14px] leading-7 text-zinc-600">
+                        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                           {entry.curatorNote || "这组上传未填写展览说明，保留为纯图片归档。"}
                         </p>
                       </div>

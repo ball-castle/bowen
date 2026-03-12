@@ -129,7 +129,7 @@
   }
   html {
     font-family:
-      var(--font-body),
+      var(--font-sans),
       "PingFang SC",
       "Microsoft YaHei",
       sans-serif;
@@ -138,17 +138,18 @@
   }
   body {
     @apply bg-background text-foreground;
-    line-height: 1.55;
-    background-image:
-      radial-gradient(circle at top left, rgba(245, 158, 11, 0.08), transparent 28%),
-      radial-gradient(circle at top right, rgba(14, 165, 233, 0.07), transparent 25%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.58) 46%, transparent 100%),
-      linear-gradient(rgba(38, 46, 56, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(38, 46, 56, 0.03) 1px, transparent 1px);
-    background-size: auto, auto, auto, 34px 34px, 34px 34px;
-    background-position: 0 0, 0 0, 0 0, center top, center top;
+    line-height: 1.6;
     min-height: 100vh;
+    /* 现代化自适应点状背景：颜色会自动跟随主题的 foreground 变化 */
+    background-image: radial-gradient(color-mix(in oklab, var(--foreground) 8%, transparent) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-position: 0 0;
   }
+}
+
+::selection {
+  background: color-mix(in oklab, var(--primary) 20%, transparent);
+  color: var(--primary);
 }
 
 ::selection {

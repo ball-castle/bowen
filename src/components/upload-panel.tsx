@@ -3,7 +3,7 @@
 import { startTransition, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { LoaderCircle, Sparkles, Trash2, Upload } from "lucide-react";
+import { LoaderCircle, Sparkles, Trash2, Upload, FileImage } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 const MAX_FILE_COUNT = 12;
-const UPLOAD_STEPS = [
+const UPLOAD_STEPS =[
   { label: "填写信息", value: "展览 / 场馆" },
   { label: "选择图片", value: "最多 12 张" },
   { label: "提交归档", value: "首页刷新" },
@@ -49,12 +49,12 @@ export function UploadPanel() {
   const router = useRouter();
   const previewsRef = useRef<PreviewImage[]>([]);
 
-  const [exhibitionName, setExhibitionName] = useState("");
+  const[exhibitionName, setExhibitionName] = useState("");
   const [venue, setVenue] = useState("");
-  const [exhibitionDate, setExhibitionDate] = useState("");
+  const[exhibitionDate, setExhibitionDate] = useState("");
   const [curatorNote, setCuratorNote] = useState("");
   const [previews, setPreviews] = useState<PreviewImage[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
+  const[isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [status, setStatus] = useState<{
     type: "idle" | "error" | "success";
@@ -71,7 +71,7 @@ export function UploadPanel() {
         URL.revokeObjectURL(preview.previewUrl);
       }
     };
-  }, []);
+  },[]);
 
   function appendFiles(fileList: File[]) {
     const imageFiles = fileList.filter((file) => file.type.startsWith("image/"));
@@ -112,7 +112,7 @@ export function UploadPanel() {
         });
       }
 
-      return [
+      return[
         ...current,
         ...acceptedFiles.map((file) => ({
           id: crypto.randomUUID(),
@@ -140,7 +140,7 @@ export function UploadPanel() {
       URL.revokeObjectURL(preview.previewUrl);
     }
 
-    previewsRef.current = [];
+    previewsRef.current =[];
     setExhibitionName("");
     setVenue("");
     setExhibitionDate("");
@@ -202,76 +202,69 @@ export function UploadPanel() {
   }
 
   return (
-    <Card className="h-full rounded-[1.8rem] border border-black/7 bg-white/80 py-0 shadow-[0_30px_96px_-68px_rgba(24,34,43,0.34)] backdrop-blur-xl xl:sticky xl:top-6">
-      <CardHeader className="gap-4 px-5 pt-5 sm:px-6 sm:pt-6">
+    <Card className="h-full rounded-[2.5rem] border border-border/40 bg-card/60 py-0 shadow-2xl shadow-primary/5 backdrop-blur-2xl xl:sticky xl:top-8">
+      <CardHeader className="gap-5 px-6 pt-8 sm:px-8 sm:pt-10">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-[11px] tracking-[0.22em] text-zinc-500 uppercase">
-              Upload
+            <p className="text-[11px] font-semibold tracking-[0.22em] text-primary/80 uppercase">
+              Upload Batch
             </p>
-            <CardTitle className="mt-2 font-[family:var(--font-display)] text-[1.7rem] font-semibold tracking-[-0.04em] text-zinc-950">
+            <CardTitle className="mt-2 font-[family:var(--font-display)] text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
               新建上传批次
             </CardTitle>
           </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/9 text-primary">
-            <Sparkles className="h-4 w-4" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-inner">
+            <Sparkles className="h-5 w-5" />
           </div>
         </div>
-        <CardDescription className="text-[13px] leading-6 text-zinc-600">
-          先整理一组展览资料，再统一上传照片。
+        <CardDescription className="text-sm leading-relaxed text-muted-foreground">
+          先整理一组展览资料，再统一上传照片。系统会自动完成排版与归档。
         </CardDescription>
 
-        <div className="grid gap-px overflow-hidden rounded-[1.15rem] border border-black/8 bg-black/[0.045] sm:grid-cols-3">
+        <div className="grid grid-cols-3 gap-2 rounded-2xl bg-muted/30 p-2">
           {UPLOAD_STEPS.map((step) => (
-            <div key={step.label} className="bg-white/76 px-3 py-2.5">
-              <p className="text-[10px] tracking-[0.18em] text-zinc-500 uppercase">
+            <div key={step.label} className="flex flex-col items-center justify-center rounded-xl bg-background/50 py-2.5 text-center shadow-sm">
+              <p className="text-[10px] font-semibold tracking-widest text-muted-foreground uppercase">
                 {step.label}
               </p>
-              <p className="mt-1 text-[13px] font-medium text-zinc-900">{step.value}</p>
+              <p className="mt-1 text-xs font-medium text-foreground">{step.value}</p>
             </div>
           ))}
         </div>
       </CardHeader>
 
-      <CardContent className="px-5 pb-5 sm:px-6 sm:pb-6">
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <section className="space-y-4 rounded-[1.25rem] border border-black/7 bg-black/[0.02] p-4">
+      <CardContent className="px-6 pb-8 sm:px-8 sm:pb-10">
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          
+          {/* Step 1: 基础信息 */}
+          <section className="space-y-5 rounded-[1.5rem] border border-border/50 bg-muted/10 p-5 transition-colors hover:bg-muted/20">
             <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <p className="text-[11px] tracking-[0.2em] text-zinc-500 uppercase">
+              <div className="space-y-1.5">
+                <p className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase">
                   Step 01
                 </p>
-                <p className="text-base font-semibold tracking-[-0.02em] text-zinc-900">
+                <p className="text-base font-semibold tracking-tight text-foreground">
                   基础信息
                 </p>
-                <p className="text-xs leading-5 text-zinc-500">
-                  记录展览名称、场馆、日期和简短说明。
-                </p>
               </div>
-              <span className="rounded-full border border-black/8 bg-white/80 px-3 py-1 text-[11px] text-zinc-500">
-                4 个字段
-              </span>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <label
-                  htmlFor="exhibition-name"
-                  className="text-[13px] font-medium text-zinc-800"
-                >
-                  展览名称
+                <label htmlFor="exhibition-name" className="text-xs font-medium text-foreground/80">
+                  展览名称 <span className="text-rose-500">*</span>
                 </label>
                 <Input
                   id="exhibition-name"
                   placeholder="例如：光的边界"
                   value={exhibitionName}
                   onChange={(event) => setExhibitionName(event.target.value)}
-                  className="h-10 rounded-[0.95rem] border-black/8 bg-white/84 px-4"
+                  className="h-11 rounded-xl border-border/50 bg-background/50 px-4 transition-all focus:bg-background focus:ring-2 focus:ring-primary/20"
                 />
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="venue" className="text-[13px] font-medium text-zinc-800">
+                <label htmlFor="venue" className="text-xs font-medium text-foreground/80">
                   场馆 / 空间
                 </label>
                 <Input
@@ -279,17 +272,14 @@ export function UploadPanel() {
                   placeholder="例如：一层主展厅"
                   value={venue}
                   onChange={(event) => setVenue(event.target.value)}
-                  className="h-10 rounded-[0.95rem] border-black/8 bg-white/84 px-4"
+                  className="h-11 rounded-xl border-border/50 bg-background/50 px-4 transition-all focus:bg-background focus:ring-2 focus:ring-primary/20"
                 />
               </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-[0.9fr_1.1fr]">
+            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <label
-                  htmlFor="exhibition-date"
-                  className="text-[13px] font-medium text-zinc-800"
-                >
+                <label htmlFor="exhibition-date" className="text-xs font-medium text-foreground/80">
                   展览日期
                 </label>
                 <Input
@@ -297,53 +287,48 @@ export function UploadPanel() {
                   type="date"
                   value={exhibitionDate}
                   onChange={(event) => setExhibitionDate(event.target.value)}
-                  className="h-10 rounded-[0.95rem] border-black/8 bg-white/84 px-4"
+                  className="h-11 rounded-xl border-border/50 bg-background/50 px-4 text-foreground transition-all focus:bg-background focus:ring-2 focus:ring-primary/20"
                 />
               </div>
 
               <div className="space-y-2">
-                <label
-                  htmlFor="curator-note"
-                  className="text-[13px] font-medium text-zinc-800"
-                >
+                <label htmlFor="curator-note" className="text-xs font-medium text-foreground/80">
                   展览说明
                 </label>
                 <Textarea
                   id="curator-note"
-                  placeholder="写一点布展、策展或拍摄说明。"
+                  placeholder="写一点布展、策展或拍摄说明..."
                   value={curatorNote}
                   onChange={(event) => setCuratorNote(event.target.value)}
-                  className="min-h-24 resize-none rounded-[0.95rem] border-black/8 bg-white/84 px-4 py-3"
+                  className="min-h-[2.75rem] resize-none rounded-xl border-border/50 bg-background/50 px-4 py-3 transition-all focus:bg-background focus:ring-2 focus:ring-primary/20"
                 />
               </div>
             </div>
           </section>
 
-          <section className="space-y-4 rounded-[1.25rem] border border-black/7 bg-black/[0.02] p-4">
+          {/* Step 2: 图片上传 */}
+          <section className="space-y-5 rounded-[1.5rem] border border-border/50 bg-muted/10 p-5 transition-colors hover:bg-muted/20">
             <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1">
-                <p className="text-[11px] tracking-[0.2em] text-zinc-500 uppercase">
+              <div className="space-y-1.5">
+                <p className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase">
                   Step 02
                 </p>
-                <p className="text-base font-semibold tracking-[-0.02em] text-zinc-900">
-                  图片上传
-                </p>
-                <p className="text-xs leading-5 text-zinc-500">
-                  支持 JPG、PNG、WEBP、AVIF、GIF，单次最多 12 张。
+                <p className="text-base font-semibold tracking-tight text-foreground">
+                  图片归档
                 </p>
               </div>
-              <span className="rounded-full border border-black/8 bg-white/76 px-3 py-1 text-[11px] text-zinc-500">
-                {previews.length} / {MAX_FILE_COUNT}
+              <span className="rounded-full border border-border bg-background/50 px-3 py-1 text-[11px] font-medium text-muted-foreground">
+                {previews.length} / {MAX_FILE_COUNT} 张
               </span>
             </div>
 
             <label
               htmlFor="file-upload"
               className={cn(
-                "block rounded-[1.15rem] border border-dashed bg-white/80 p-5 transition",
+                "group relative block cursor-pointer rounded-2xl border-2 border-dashed p-8 transition-all duration-200",
                 isDragging
-                  ? "border-primary/70 bg-primary/[0.045] shadow-[0_0_0_5px_rgba(8,145,178,0.06)]"
-                  : "border-black/10 hover:border-primary/35 hover:bg-white/90",
+                  ? "border-primary bg-primary/5 scale-[1.02]"
+                  : "border-border hover:border-primary/50 hover:bg-muted/30",
               )}
               onDragEnter={(event) => {
                 event.preventDefault();
@@ -369,42 +354,36 @@ export function UploadPanel() {
                 accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
                 className="hidden"
                 onChange={(event) => {
-                  appendFiles(Array.from(event.target.files ?? []));
+                  appendFiles(Array.from(event.target.files ??[]));
                   event.target.value = "";
                 }}
               />
 
-              <div className="flex flex-col items-center gap-3 text-center">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/8 text-primary">
-                  <Upload className="h-4 w-4" />
+              <div className="flex flex-col items-center gap-4 text-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-background border border-border shadow-sm transition-transform group-hover:-translate-y-1 group-hover:shadow-md">
+                  <FileImage className="h-6 w-6 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>
-                <div className="space-y-1.5">
-                  <p className="text-sm font-medium text-zinc-900">
-                    拖拽照片到这里，或点击选择文件
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">
+                    点击选择或将照片拖拽至此
                   </p>
-                  <p className="text-xs leading-5 text-zinc-500">
-                    首页会按最新批次自动刷新展示。
+                  <p className="text-xs text-muted-foreground">
+                    支持 JPG, PNG, WEBP (单次最多12张)
                   </p>
                 </div>
               </div>
             </label>
 
-            <p className="text-[13px] leading-6 text-zinc-500">
-              建议每次只上传同一场展览的照片，提交前可先删除不合适的图片。
-            </p>
-
-            {previews.length ? (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-sm font-medium text-zinc-800">
-                    待上传图片 {previews.length} / {MAX_FILE_COUNT}
-                  </p>
+            {previews.length > 0 && (
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center justify-between px-1">
+                  <p className="text-xs font-medium text-muted-foreground">待上传队列</p>
                   <button
                     type="button"
-                    className="text-sm text-zinc-500 transition hover:text-zinc-900"
+                    className="text-xs font-medium text-rose-500 hover:text-rose-600 transition-colors"
                     onClick={resetForm}
                   >
-                    重置本次填写
+                    清空重置
                   </button>
                 </div>
 
@@ -412,70 +391,73 @@ export function UploadPanel() {
                   {previews.map((preview) => (
                     <div
                       key={preview.id}
-                      className="overflow-hidden rounded-[1.05rem] border border-black/8 bg-white/90"
+                      className="group relative overflow-hidden rounded-xl border border-border/50 bg-background/50 shadow-sm transition-all hover:shadow-md"
                     >
-                      <div className="relative aspect-[4/3]">
+                      <div className="relative aspect-[4/3] bg-muted/20">
                         <Image
                           src={preview.previewUrl}
                           alt={preview.file.name}
                           fill
                           unoptimized
                           sizes="(min-width: 640px) 20vw, 40vw"
-                          className="object-cover"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                      </div>
-                      <div className="flex items-start justify-between gap-3 px-3 py-3">
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-medium text-zinc-900">
-                            {preview.file.name}
-                          </p>
-                          <p className="text-xs text-zinc-500">
-                            {formatBytes(preview.file.size)}
-                          </p>
+                        {/* 悬浮删除按钮蒙版 */}
+                        <div className="absolute inset-0 bg-background/60 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                          <button
+                            type="button"
+                            className="rounded-full bg-rose-500 p-2.5 text-white shadow-lg transition-transform hover:scale-110 hover:bg-rose-600"
+                            onClick={() => removePreview(preview.id)}
+                            aria-label={`移除 ${preview.file.name}`}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          className="rounded-full p-1 text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-900"
-                          onClick={() => removePreview(preview.id)}
-                          aria-label={`移除 ${preview.file.name}`}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                      </div>
+                      <div className="px-3 py-2">
+                        <p className="truncate text-xs font-medium text-foreground">
+                          {preview.file.name}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">
+                          {formatBytes(preview.file.size)}
+                        </p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-            ) : null}
+            )}
           </section>
 
-          {status.type !== "idle" ? (
+          {/* 状态提示区 */}
+          {status.type !== "idle" && (
             <div
               className={cn(
-                "rounded-[0.95rem] px-3.5 py-2.5 text-[13px] leading-6",
+                "animate-in fade-in slide-in-from-top-2 rounded-xl px-4 py-3 text-sm font-medium",
                 status.type === "success"
-                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border border-rose-200 bg-rose-50 text-rose-700",
+                  ? "border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                  : "border border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-400",
               )}
             >
               {status.message}
             </div>
-          ) : null}
+          )}
 
+          {/* 提交按钮 */}
           <Button
             type="submit"
-            className="h-11 w-full rounded-[0.95rem] bg-[#28363d] text-sm font-semibold text-white shadow-[0_18px_40px_-24px_rgba(40,54,61,0.55)] hover:bg-[#223038]"
+            className="group h-12 w-full rounded-xl bg-primary text-primary-foreground text-sm font-bold shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 disabled:opacity-70"
             disabled={isUploading}
           >
             {isUploading ? (
               <>
-                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-                正在上传...
+                <LoaderCircle className="mr-2 h-5 w-5 animate-spin" />
+                正在加密上传中...
               </>
             ) : (
               <>
-                <Upload className="mr-2 h-4 w-4" />
-                归档并上传照片
+                <Upload className="mr-2 h-4 w-4 transition-transform group-hover:-translate-y-0.5" />
+                确认归档并上传
               </>
             )}
           </Button>
