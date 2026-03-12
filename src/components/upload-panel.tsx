@@ -18,6 +18,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 const MAX_FILE_COUNT = 12;
+const UPLOAD_STEPS = [
+  { label: "填写信息", value: "展览 / 场馆" },
+  { label: "选择图片", value: "最多 12 张" },
+  { label: "提交归档", value: "首页刷新" },
+];
 
 type PreviewImage = {
   id: string;
@@ -197,36 +202,55 @@ export function UploadPanel() {
   }
 
   return (
-    <Card className="h-full rounded-[1.65rem] border border-black/7 bg-white/78 py-0 shadow-[0_30px_96px_-68px_rgba(24,34,43,0.34)] backdrop-blur-xl">
-      <CardHeader className="gap-2.5 px-5 pt-5 sm:px-6 sm:pt-6">
+    <Card className="h-full rounded-[1.8rem] border border-black/7 bg-white/80 py-0 shadow-[0_30px_96px_-68px_rgba(24,34,43,0.34)] backdrop-blur-xl xl:sticky xl:top-6">
+      <CardHeader className="gap-4 px-5 pt-5 sm:px-6 sm:pt-6">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-[11px] tracking-[0.22em] text-zinc-500 uppercase">
               Upload
             </p>
-            <CardTitle className="mt-2 text-[1.4rem] font-semibold tracking-[-0.03em] text-zinc-950">
+            <CardTitle className="mt-2 font-[family:var(--font-display)] text-[1.7rem] font-semibold tracking-[-0.04em] text-zinc-950">
               新建上传批次
             </CardTitle>
           </div>
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/9 text-primary">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/9 text-primary">
             <Sparkles className="h-4 w-4" />
           </div>
         </div>
         <CardDescription className="text-[13px] leading-6 text-zinc-600">
-          保持信息简洁，上传后会立即写入首页归档。
+          先整理一组展览资料，再统一上传照片。
         </CardDescription>
+
+        <div className="grid gap-px overflow-hidden rounded-[1.15rem] border border-black/8 bg-black/[0.045] sm:grid-cols-3">
+          {UPLOAD_STEPS.map((step) => (
+            <div key={step.label} className="bg-white/76 px-3 py-2.5">
+              <p className="text-[10px] tracking-[0.18em] text-zinc-500 uppercase">
+                {step.label}
+              </p>
+              <p className="mt-1 text-[13px] font-medium text-zinc-900">{step.value}</p>
+            </div>
+          ))}
+        </div>
       </CardHeader>
 
       <CardContent className="px-5 pb-5 sm:px-6 sm:pb-6">
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <section className="space-y-4 rounded-[1.25rem] border border-black/8 bg-white/58 p-4 backdrop-blur-sm">
-            <div className="space-y-1">
-              <p className="text-[11px] tracking-[0.2em] text-zinc-500 uppercase">
-                基础信息
-              </p>
-              <p className="text-xs leading-5 text-zinc-500">
-                记录展览名称、场馆、日期和简短说明。
-              </p>
+          <section className="space-y-4 rounded-[1.25rem] border border-black/7 bg-black/[0.02] p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <p className="text-[11px] tracking-[0.2em] text-zinc-500 uppercase">
+                  Step 01
+                </p>
+                <p className="text-base font-semibold tracking-[-0.02em] text-zinc-900">
+                  基础信息
+                </p>
+                <p className="text-xs leading-5 text-zinc-500">
+                  记录展览名称、场馆、日期和简短说明。
+                </p>
+              </div>
+              <span className="rounded-full border border-black/8 bg-white/80 px-3 py-1 text-[11px] text-zinc-500">
+                4 个字段
+              </span>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
@@ -260,7 +284,7 @@ export function UploadPanel() {
               </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-[0.92fr_1.08fr]">
+            <div className="grid gap-3 sm:grid-cols-[0.9fr_1.1fr]">
               <div className="space-y-2">
                 <label
                   htmlFor="exhibition-date"
@@ -295,10 +319,13 @@ export function UploadPanel() {
             </div>
           </section>
 
-          <section className="space-y-4 rounded-[1.25rem] border border-black/8 bg-white/58 p-4 backdrop-blur-sm">
+          <section className="space-y-4 rounded-[1.25rem] border border-black/7 bg-black/[0.02] p-4">
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
                 <p className="text-[11px] tracking-[0.2em] text-zinc-500 uppercase">
+                  Step 02
+                </p>
+                <p className="text-base font-semibold tracking-[-0.02em] text-zinc-900">
                   图片上传
                 </p>
                 <p className="text-xs leading-5 text-zinc-500">
@@ -313,7 +340,7 @@ export function UploadPanel() {
             <label
               htmlFor="file-upload"
               className={cn(
-                "block rounded-[1.15rem] border border-dashed bg-zinc-50/78 p-4 transition",
+                "block rounded-[1.15rem] border border-dashed bg-white/80 p-5 transition",
                 isDragging
                   ? "border-primary/70 bg-primary/[0.045] shadow-[0_0_0_5px_rgba(8,145,178,0.06)]"
                   : "border-black/10 hover:border-primary/35 hover:bg-white/90",
@@ -348,7 +375,7 @@ export function UploadPanel() {
               />
 
               <div className="flex flex-col items-center gap-3 text-center">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/8 text-primary">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/8 text-primary">
                   <Upload className="h-4 w-4" />
                 </div>
                 <div className="space-y-1.5">
@@ -362,6 +389,10 @@ export function UploadPanel() {
               </div>
             </label>
 
+            <p className="text-[13px] leading-6 text-zinc-500">
+              建议每次只上传同一场展览的照片，提交前可先删除不合适的图片。
+            </p>
+
             {previews.length ? (
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-4">
@@ -373,7 +404,7 @@ export function UploadPanel() {
                     className="text-sm text-zinc-500 transition hover:text-zinc-900"
                     onClick={resetForm}
                   >
-                    清空全部
+                    重置本次填写
                   </button>
                 </div>
 
@@ -421,7 +452,7 @@ export function UploadPanel() {
           {status.type !== "idle" ? (
             <div
               className={cn(
-                "rounded-[1rem] px-4 py-3 text-sm",
+                "rounded-[0.95rem] px-3.5 py-2.5 text-[13px] leading-6",
                 status.type === "success"
                   ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
                   : "border border-rose-200 bg-rose-50 text-rose-700",
