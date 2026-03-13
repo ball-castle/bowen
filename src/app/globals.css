@@ -128,22 +128,17 @@
     @apply border-border outline-ring/50;
   }
   html {
-    font-family:
-      var(--font-sans),
-      "PingFang SC",
-      "Microsoft YaHei",
-      sans-serif;
+    font-family: var(--font-sans), "PingFang SC", "Microsoft YaHei", sans-serif;
     scroll-behavior: smooth;
-    background: var(--background);
   }
   body {
     @apply bg-background text-foreground;
     line-height: 1.6;
     min-height: 100vh;
-    background-image:
-      radial-gradient(circle at top, rgba(255, 255, 255, 0.96), transparent 46%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(244, 244, 246, 0.98) 62%, rgba(241, 241, 244, 1));
-    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* 极简的高级背景，让照片更突出 */
+    background-image: radial-gradient(circle at 50% 0%, hsl(var(--primary)/0.05) 0%, transparent 70%);
   }
 }
 

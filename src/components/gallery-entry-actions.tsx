@@ -14,7 +14,10 @@ import {
   X,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { formatBytes, formatDateTimeLabel } from "@/lib/formatters";
 import type { GalleryEntry, GalleryImage } from "@/lib/gallery";
 import { cn } from "@/lib/utils";
@@ -173,10 +176,14 @@ export function GalleryEntryActions({
         return current;
       }
 
-      setStatus(notices.length ? {
-        type: "error",
-        message: `${notices.join("，")}。`,
-      } : IDLE_STATUS);
+      setStatus(
+        notices.length
+          ? {
+              type: "error",
+              message: `${notices.join("，")}。`,
+            }
+          : IDLE_STATUS,
+      );
 
       return [
         ...current,
@@ -345,7 +352,7 @@ export function GalleryEntryActions({
         size="sm"
         variant="outline"
         className={cn(
-          "border-white/35 bg-white/82 text-zinc-900 backdrop-blur-md hover:bg-white",
+          "rounded-full border-white/35 bg-white/84 px-4 text-zinc-900 shadow-sm backdrop-blur-md hover:bg-white",
           buttonClassName,
         )}
         onClick={() => setIsOpen(true)}
@@ -355,7 +362,7 @@ export function GalleryEntryActions({
 
       {isOpen ? (
         <div
-          className="fixed inset-0 z-50 bg-black/42 px-4 py-5 backdrop-blur-sm sm:px-6 sm:py-8"
+          className="fixed inset-0 z-50 bg-[rgba(9,9,11,0.48)] px-4 py-5 backdrop-blur-xl sm:px-6 sm:py-8"
           onClick={() => {
             if (!isSaving && !isDeleting) {
               setIsOpen(false);
@@ -365,68 +372,84 @@ export function GalleryEntryActions({
           <div
             role="dialog"
             aria-modal="true"
-            className="mx-auto flex h-full w-full max-w-6xl flex-col overflow-hidden rounded-[2rem] border border-black/5 bg-white shadow-[0_32px_120px_-50px_rgba(15,23,42,0.45)]"
+            className="mx-auto flex h-full w-full max-w-[1380px] flex-col overflow-hidden rounded-[2.3rem] border border-white/15 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(244,244,246,0.88))] shadow-[0_40px_140px_-52px_rgba(15,23,42,0.52)]"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="flex items-start justify-between gap-4 border-b border-black/6 px-5 py-5 sm:px-7 sm:py-6">
-              <div className="space-y-2">
-                <p className="text-[11px] font-semibold tracking-[0.22em] text-zinc-500 uppercase">
-                  Photo Manager
-                </p>
-                <div>
-                  <h3 className="text-2xl font-semibold tracking-tight text-zinc-950 sm:text-[2rem]">
-                    管理这组照片
-                  </h3>
-                  <p className="mt-1 text-sm text-zinc-500">
-                    {formatDateTimeLabel(entry.createdAt)} · 当前 {draftImages.length} 张
-                  </p>
-                </div>
-              </div>
+            <div className="border-b border-black/6 bg-white/72 px-5 py-5 backdrop-blur-xl sm:px-7 sm:py-6">
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-4">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge
+                      variant="secondary"
+                      className="h-8 rounded-full bg-white px-4 text-[11px] tracking-[0.2em] text-zinc-700 uppercase shadow-sm"
+                    >
+                      Photo Manager
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="h-8 rounded-full border-black/8 bg-white/60 px-4 text-[11px] tracking-[0.2em] text-zinc-500 uppercase"
+                    >
+                      {draftImages.length} / {MAX_FILE_COUNT} 张
+                    </Badge>
+                  </div>
 
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                className="rounded-full text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900"
-                onClick={() => setIsOpen(false)}
-                disabled={isSaving || isDeleting}
-              >
-                <X />
-              </Button>
+                  <div>
+                    <h3 className="text-2xl font-semibold tracking-[-0.04em] text-zinc-950 sm:text-[2rem]">
+                      管理这组照片
+                    </h3>
+                    <p className="mt-1 text-sm text-zinc-500">
+                      {formatDateTimeLabel(entry.createdAt)} · 第一张会作为封面显示
+                    </p>
+                  </div>
+                </div>
+
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  className="rounded-full text-zinc-500 hover:bg-white hover:text-zinc-900"
+                  onClick={() => setIsOpen(false)}
+                  disabled={isSaving || isDeleting}
+                >
+                  <X />
+                </Button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto">
-              <div className="grid gap-5 px-5 py-5 sm:px-7 sm:py-7 xl:grid-cols-[minmax(0,1fr)_21rem]">
-                <div className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-5 px-5 py-5 sm:px-7 sm:py-7 xl:grid-cols-[minmax(0,1fr)_22rem]">
+                <section className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
                     {draftImages.map((image, index) => (
                       <div
                         key={image.key}
-                        className="overflow-hidden rounded-[1.5rem] border border-black/7 bg-zinc-50 shadow-sm"
+                        className="group overflow-hidden rounded-[1.7rem] border border-black/7 bg-white/84 p-2 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.24)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_28px_56px_-34px_rgba(15,23,42,0.28)]"
                       >
-                        <div className="relative aspect-[4/5] overflow-hidden">
+                        <div className="relative aspect-[4/5] overflow-hidden rounded-[1.3rem] bg-zinc-100">
                           <Image
                             src={image.src}
                             alt={image.filename}
                             fill
                             unoptimized={image.kind === "new"}
-                            sizes="(min-width: 1280px) 20vw, (min-width: 768px) 32vw, 100vw"
-                            className="object-cover"
+                            sizes="(min-width: 1536px) 18vw, (min-width: 768px) 32vw, 100vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                           />
 
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/44 via-transparent to-transparent" />
+
                           <div className="absolute left-3 top-3 flex flex-wrap items-center gap-2">
-                            <span className="rounded-full bg-white/85 px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] text-zinc-900 uppercase backdrop-blur">
+                            <Badge className="h-7 rounded-full bg-white/88 px-3 text-[10px] tracking-[0.16em] text-zinc-900 uppercase backdrop-blur-md">
                               {index === 0 ? "封面" : `#${index + 1}`}
-                            </span>
+                            </Badge>
                             {image.kind === "new" ? (
-                              <span className="rounded-full bg-zinc-950/78 px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] text-white uppercase backdrop-blur">
+                              <Badge className="h-7 rounded-full bg-zinc-950/80 px-3 text-[10px] tracking-[0.16em] text-white uppercase backdrop-blur-md">
                                 新加
-                              </span>
+                              </Badge>
                             ) : null}
                           </div>
                         </div>
 
-                        <div className="space-y-3 px-3 py-3">
+                        <div className="space-y-3 px-2 pb-2 pt-3">
                           <div>
                             <p className="truncate text-sm font-medium text-zinc-950">
                               {image.filename}
@@ -441,7 +464,7 @@ export function GalleryEntryActions({
                               type="button"
                               size="icon-sm"
                               variant="outline"
-                              className="rounded-xl"
+                              className="rounded-2xl border-black/8 bg-white hover:-translate-y-0.5"
                               onClick={() => moveImage(image.key, -1)}
                               disabled={index === 0 || isSaving || isDeleting}
                             >
@@ -451,7 +474,7 @@ export function GalleryEntryActions({
                               type="button"
                               size="icon-sm"
                               variant="outline"
-                              className="rounded-xl"
+                              className="rounded-2xl border-black/8 bg-white hover:-translate-y-0.5"
                               onClick={() => setAsCover(image.key)}
                               disabled={index === 0 || isSaving || isDeleting}
                             >
@@ -461,7 +484,7 @@ export function GalleryEntryActions({
                               type="button"
                               size="icon-sm"
                               variant="outline"
-                              className="rounded-xl"
+                              className="rounded-2xl border-black/8 bg-white hover:-translate-y-0.5"
                               onClick={() => moveImage(image.key, 1)}
                               disabled={
                                 index === draftImages.length - 1 ||
@@ -475,7 +498,7 @@ export function GalleryEntryActions({
                               type="button"
                               size="icon-sm"
                               variant="outline"
-                              className="rounded-xl border-rose-500/20 bg-rose-500/6 text-rose-600 hover:bg-rose-500/10 hover:text-rose-700"
+                              className="rounded-2xl border-rose-500/20 bg-rose-500/6 text-rose-600 hover:bg-rose-500/10 hover:text-rose-700"
                               onClick={() => removeImage(image.key)}
                               disabled={
                                 draftImages.length === 1 || isSaving || isDeleting
@@ -488,81 +511,111 @@ export function GalleryEntryActions({
                       </div>
                     ))}
                   </div>
-                </div>
+                </section>
 
-                <aside className="space-y-4 rounded-[1.75rem] border border-black/6 bg-zinc-50/90 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                <aside className="space-y-4 xl:sticky xl:top-0 xl:self-start">
+                  <Card
+                    size="sm"
+                    className="rounded-[1.9rem] border-white/70 bg-white/80 py-0 shadow-[0_20px_48px_-34px_rgba(15,23,42,0.24)]"
+                  >
+                    <CardContent className="px-5 py-5">
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-semibold tracking-[0.2em] text-zinc-500 uppercase">
+                            Quick Adjust
+                          </p>
+                          <h4 className="text-xl font-semibold tracking-tight text-zinc-950">
+                            直接整理这一组
+                          </h4>
+                          <p className="text-sm leading-6 text-zinc-500">
+                            你可以追加照片、重新排序，或者把其中一张提到第一位作为封面。
+                          </p>
+                        </div>
+
+                        <div className="grid gap-2">
+                          <div className="flex items-center justify-between rounded-[1.2rem] border border-black/6 bg-zinc-50/80 px-4 py-3">
+                            <span className="text-xs text-zinc-500">当前照片</span>
+                            <span className="text-sm font-semibold text-zinc-950">
+                              {draftImages.length} / {MAX_FILE_COUNT}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between rounded-[1.2rem] border border-black/6 bg-zinc-50/80 px-4 py-3">
+                            <span className="text-xs text-zinc-500">封面规则</span>
+                            <span className="text-sm font-semibold text-zinc-950">
+                              第一张
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card
+                    size="sm"
+                    className="rounded-[1.9rem] border-dashed border-black/10 bg-white/74 py-0 shadow-none"
+                  >
+                    <CardContent className="px-5 py-5">
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-semibold tracking-[0.2em] text-zinc-500 uppercase">
+                            Add More
+                          </p>
+                          <p className="text-base font-semibold tracking-tight text-zinc-950">
+                            继续向这组里追加照片
+                          </p>
+                        </div>
+
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+                          multiple
+                          className="hidden"
+                          onChange={(event) => {
+                            appendFiles(Array.from(event.target.files ?? []));
+                            event.target.value = "";
+                          }}
+                        />
+
+                        <Button
+                          type="button"
+                          size="lg"
+                          variant="outline"
+                          className="w-full rounded-[1.2rem] border-black/8 bg-white shadow-sm hover:-translate-y-0.5"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={
+                            draftImages.length >= MAX_FILE_COUNT || isSaving || isDeleting
+                          }
+                        >
+                          <ImagePlus />
+                          继续添加照片
+                        </Button>
+
+                        <p className="text-xs leading-5 text-zinc-500">
+                          从本地继续追加图片，系统会自动去重，每组最多保留 12 张。
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <div
+                    className={cn(
+                      "rounded-[1.6rem] border px-4 py-4 text-sm backdrop-blur-sm",
+                      status.type === "error"
+                        ? "border-rose-500/16 bg-rose-500/8 text-rose-700"
+                        : "border-black/6 bg-white/78 text-zinc-500",
+                    )}
+                  >
+                    {status.type === "error" ? status.message : "轻点整理，保存后首页会立即刷新。"}
+                  </div>
+
+                  <Separator />
+
                   <div className="space-y-2">
-                    <p className="text-[11px] font-semibold tracking-[0.22em] text-zinc-500 uppercase">
-                      Quick Adjust
-                    </p>
-                    <h4 className="text-xl font-semibold tracking-tight text-zinc-950">
-                      直接整理这一组
-                    </h4>
-                    <p className="text-sm leading-6 text-zinc-500">
-                      第一张会作为封面展示。你可以追加照片、重新排序，或者删掉不想保留的那几张。
-                    </p>
-                  </div>
-
-                  <div className="grid gap-2 rounded-[1.35rem] bg-white p-2 shadow-sm">
-                    <div className="flex items-center justify-between rounded-[1rem] bg-zinc-50 px-3 py-3">
-                      <span className="text-xs text-zinc-500">当前照片</span>
-                      <span className="text-sm font-semibold text-zinc-950">
-                        {draftImages.length} / {MAX_FILE_COUNT}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between rounded-[1rem] bg-zinc-50 px-3 py-3">
-                      <span className="text-xs text-zinc-500">封面规则</span>
-                      <span className="text-sm font-semibold text-zinc-950">
-                        第一张
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="rounded-[1.35rem] border border-dashed border-zinc-200 bg-white px-4 py-4">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
-                      multiple
-                      className="hidden"
-                      onChange={(event) => {
-                        appendFiles(Array.from(event.target.files ?? []));
-                        event.target.value = "";
-                      }}
-                    />
-
                     <Button
                       type="button"
                       size="lg"
-                      variant="outline"
-                      className="w-full rounded-[1.1rem]"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={draftImages.length >= MAX_FILE_COUNT || isSaving || isDeleting}
-                    >
-                      <ImagePlus />
-                      继续添加照片
-                    </Button>
-
-                    <p className="mt-3 text-xs leading-5 text-zinc-500">
-                      支持拖拽前已经上传过的照片继续补充，最多保留 12 张。
-                    </p>
-                  </div>
-
-                  {status.type === "error" ? (
-                    <div className="rounded-[1.1rem] border border-rose-500/16 bg-rose-500/8 px-4 py-3 text-sm text-rose-700">
-                      {status.message}
-                    </div>
-                  ) : (
-                    <div className="rounded-[1.1rem] border border-black/6 bg-white px-4 py-3 text-sm text-zinc-500">
-                      轻点整理，保存后首页会立即刷新。
-                    </div>
-                  )}
-
-                  <div className="space-y-2">
-                    <Button
-                      type="button"
-                      size="lg"
-                      className="w-full rounded-[1.1rem]"
+                      className="w-full rounded-[1.25rem]"
                       onClick={handleSave}
                       disabled={isSaving || isDeleting}
                     >
@@ -583,7 +636,7 @@ export function GalleryEntryActions({
                       type="button"
                       size="lg"
                       variant="outline"
-                      className="w-full rounded-[1.1rem] border-rose-500/20 bg-rose-500/6 text-rose-600 hover:bg-rose-500/10 hover:text-rose-700"
+                      className="w-full rounded-[1.25rem] border-rose-500/20 bg-rose-500/6 text-rose-600 hover:bg-rose-500/10 hover:text-rose-700"
                       onClick={handleDeleteGroup}
                       disabled={isSaving || isDeleting}
                     >
