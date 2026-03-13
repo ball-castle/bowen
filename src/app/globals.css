@@ -55,29 +55,29 @@
     "Noto Serif SC",
     "Songti SC",
     serif;
-  --background: oklch(0.986 0.005 90.3);
-  --foreground: oklch(0.235 0.017 38.12);
-  --card: oklch(0.995 0.004 92.8 / 90%);
-  --card-foreground: oklch(0.235 0.017 38.12);
-  --popover: oklch(0.995 0.004 92.8);
-  --popover-foreground: oklch(0.235 0.017 38.12);
-  --primary: oklch(0.398 0.05 197.69);
-  --primary-foreground: oklch(0.985 0.004 95.4);
-  --secondary: oklch(0.968 0.007 89.4);
-  --secondary-foreground: oklch(0.297 0.017 39.53);
-  --muted: oklch(0.971 0.006 90.12);
-  --muted-foreground: oklch(0.5 0.018 42.01);
-  --accent: oklch(0.95 0.016 82.45);
-  --accent-foreground: oklch(0.305 0.019 39.24);
+  --background: oklch(0.986 0.002 247.84);
+  --foreground: oklch(0.274 0.01 253.7);
+  --card: oklch(0.998 0.001 247.86 / 96%);
+  --card-foreground: oklch(0.274 0.01 253.7);
+  --popover: oklch(0.998 0.001 247.86);
+  --popover-foreground: oklch(0.274 0.01 253.7);
+  --primary: oklch(0.257 0.013 253.37);
+  --primary-foreground: oklch(0.985 0.002 247.84);
+  --secondary: oklch(0.965 0.003 247.83);
+  --secondary-foreground: oklch(0.335 0.012 253.43);
+  --muted: oklch(0.964 0.003 247.84);
+  --muted-foreground: oklch(0.53 0.014 253.35);
+  --accent: oklch(0.951 0.004 247.83);
+  --accent-foreground: oklch(0.335 0.012 253.43);
   --destructive: oklch(0.592 0.192 27.62);
-  --border: oklch(0.904 0.008 85.74);
-  --input: oklch(0.958 0.006 91.02);
-  --ring: oklch(0.566 0.041 195.1);
-  --chart-1: oklch(0.655 0.076 196.34);
-  --chart-2: oklch(0.731 0.069 74.61);
-  --chart-3: oklch(0.598 0.083 41.08);
-  --chart-4: oklch(0.646 0.067 152.02);
-  --chart-5: oklch(0.564 0.057 229.03);
+  --border: oklch(0.907 0.004 247.86);
+  --input: oklch(0.959 0.003 247.84);
+  --ring: oklch(0.565 0.017 250.78);
+  --chart-1: oklch(0.636 0.084 247.49);
+  --chart-2: oklch(0.758 0.03 196.46);
+  --chart-3: oklch(0.69 0.086 80.01);
+  --chart-4: oklch(0.672 0.051 160.37);
+  --chart-5: oklch(0.566 0.04 274.71);
   --radius: 0.95rem;
   --sidebar: oklch(0.993 0.005 92.6);
   --sidebar-foreground: oklch(0.235 0.017 38.12);
@@ -140,19 +140,14 @@
     @apply bg-background text-foreground;
     line-height: 1.6;
     min-height: 100vh;
-    /* 现代化自适应点状背景：颜色会自动跟随主题的 foreground 变化 */
-    background-image: radial-gradient(color-mix(in oklab, var(--foreground) 8%, transparent) 1px, transparent 1px);
-    background-size: 28px 28px;
-    background-position: 0 0;
+    background-image:
+      radial-gradient(circle at top, rgba(255, 255, 255, 0.96), transparent 46%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(244, 244, 246, 0.98) 62%, rgba(241, 241, 244, 1));
+    background-attachment: fixed;
   }
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--primary) 20%, transparent);
-  color: var(--primary);
-}
-
-::selection {
-  background: color-mix(in oklab, var(--primary) 26%, white);
+  background: color-mix(in oklab, var(--primary) 18%, white);
   color: var(--foreground);
 }

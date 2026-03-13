@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { mkdir, writeFile } from "fs/promises";
+import { mkdir, rm, writeFile } from "fs/promises";
 import path from "path";
 
 import { revalidatePath } from "next/cache";
@@ -33,7 +33,7 @@ function toSlug(value: string) {
     .replace(/^-+|-+$/g, "")
     .toLowerCase();
 
-  return normalized || "exhibition";
+  return normalized || "photo";
 }
 
 function extFromMimeType(mimeType: string) {
@@ -58,6 +58,8 @@ function isFile(value: FormDataEntryValue): value is File {
 }
 
 export async function POST(request: Request) {
+  let uploadDir: string | null = null;
+
   try {
     const formData = await request.formData();
     const exhibitionName = String(formData.get("exhibitionName") ?? "").trim();
@@ -69,16 +71,9 @@ export async function POST(request: Request) {
       .filter(isFile)
       .filter((file) => file.size > 0);
 
-    if (!exhibitionName) {
-      return NextResponse.json(
-        { error: "请先填写展览名称。" },
-        { status: 400 },
-      );
-    }
-
     if (!files.length) {
       return NextResponse.json(
-        { error: "至少需要上传一张展览照片。" },
+        { error: "至少需要选择一张照片。" },
         { status: 400 },
       );
     }
@@ -107,8 +102,8 @@ export async function POST(request: Request) {
     }
 
     const entryId = randomUUID();
-    const uploadFolder = `${toSlug(exhibitionName)}-${entryId.slice(0, 8)}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads", uploadFolder);
+    const uploadFolder = `memory-${entryId.slice(0, 8)}`;
+    uploadDir = path.join(process.cwd(), "public", "uploads", uploadFolder);
 
     await mkdir(uploadDir, { recursive: true });
 
@@ -129,7 +124,7 @@ export async function POST(request: Request) {
       images.push({
         id: randomUUID(),
         src: `/uploads/${uploadFolder}/${storedFileName}`,
-        alt: `${exhibitionName} - ${index + 1}`,
+        alt: `日常照片 ${index + 1}`,
         filename: file.name,
         mimeType: file.type,
         size: file.size,
@@ -153,8 +148,16 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Upload failed", error);
 
+    if (uploadDir) {
+      await rm(uploadDir, { recursive: true, force: true }).catch(
+        (cleanupError) => {
+          console.error("Upload cleanup failed", cleanupError);
+        },
+      );
+    }
+
     return NextResponse.json(
-      { error: "上传失败，请稍后再试。" },
+      { error: "保存失败，请稍后再试。" },
       { status: 500 },
     );
   }

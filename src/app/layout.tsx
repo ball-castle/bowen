@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "展览影像归档站 | Exhibition Archive",
-  description: "使用 Next.js、Tailwind CSS 构建的现代化展览照片上传与归档网站。",
+  title: "个人照片墙 | Personal Photo Wall",
+  description: "一个只为自己保存日常照片的私人照片墙。",
 };
 
 // 配置视口和基础的主题色 (帮助浏览器更好地适配亮暗模式状态栏)

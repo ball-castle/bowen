@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { formatBytes, formatDateLabel, formatDateTimeLabel } from "@/lib/formatters";
+import { GalleryEntryActions } from "@/components/gallery-entry-actions";
+import { Card, CardContent } from "@/components/ui/card";
+import { formatDateTimeLabel } from "@/lib/formatters";
 import type { GalleryEntry } from "@/lib/gallery";
 
 type ExhibitionGalleryProps = {
@@ -12,212 +12,144 @@ type ExhibitionGalleryProps = {
 
 export function ExhibitionGallery({ entries }: ExhibitionGalleryProps) {
   const photoCount = entries.reduce((total, entry) => total + entry.images.length, 0);
-  const venueCount = new Set(entries.map((entry) => entry.venue.trim()).filter(Boolean)).size;
-  const summaryItems =[
-    { label: "归档批次", value: entries.length },
-    { label: "图片总数", value: photoCount },
-    { label: "记录场馆", value: venueCount },
+  const latestEntry = entries[0];
+  const summaryItems = [
+    { label: "照片组", value: entries.length },
+    { label: "照片数", value: photoCount },
+    {
+      label: "最近保存",
+      value: latestEntry ? formatDateTimeLabel(latestEntry.createdAt) : "还没有记录",
+    },
   ];
 
   return (
-    <section className="space-y-8">
-      {/* 顶部数据汇总卡片 */}
-      <div className="relative overflow-hidden rounded-[2rem] border border-border/40 bg-card/60 px-6 py-8 shadow-2xl shadow-primary/5 backdrop-blur-2xl sm:px-10 sm:py-10">
-        <div className="absolute -right-20 -top-20 -z-10 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
-        
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-3">
-            <p className="text-[11px] font-bold tracking-[0.25em] text-primary/80 uppercase">
-              Archive Wall
-            </p>
-            <div className="flex flex-wrap items-end gap-4">
-              <h2 className="font-[family:var(--font-display)] text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-                展览图片墙
-              </h2>
-              <span className="mb-1 rounded-full bg-muted/50 px-3 py-1 text-xs font-medium text-muted-foreground">
-                共 {entries.length} 个批次
-              </span>
-            </div>
-            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
-              按上传时间倒序排列，把每次展览的图像与说明整理成一页完整记录，留存视觉与空间的记忆。
+    <section className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col gap-5 rounded-[2.4rem] bg-white px-6 py-7 shadow-[0_18px_70px_-42px_rgba(15,23,42,0.22)] ring-1 ring-black/5 sm:px-8 sm:py-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="space-y-3">
+          <p className="text-[11px] font-semibold tracking-[0.24em] text-zinc-500 uppercase">
+            Recent Memories
+          </p>
+          <div className="space-y-2">
+            <h2 className="text-3xl font-semibold tracking-[-0.04em] text-zinc-950 sm:text-4xl">
+              最近留下的照片
+            </h2>
+            <p className="max-w-2xl text-sm leading-7 text-zinc-500 sm:text-[15px]">
+              按保存时间倒序排开。默认只看照片本身，需要整理时再打开管理面板。
             </p>
           </div>
+        </div>
 
-          <div className="grid gap-2 rounded-2xl bg-muted/30 p-2 sm:grid-cols-3 lg:w-[24rem]">
-            {summaryItems.map((item) => (
-              <div key={item.label} className="flex flex-col items-center justify-center rounded-xl bg-background/50 px-4 py-3 text-center shadow-sm transition-transform hover:-translate-y-0.5">
-                <p className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
-                  {item.label}
-                </p>
-                <p className="mt-1.5 text-xl font-bold tracking-tight text-foreground">
-                  {item.value}
-                </p>
-              </div>
-            ))}
-          </div>
+        <div className="grid gap-2 sm:grid-cols-3 lg:w-[34rem]">
+          {summaryItems.map((item) => (
+            <div
+              key={item.label}
+              className="rounded-[1.35rem] bg-zinc-50 px-4 py-4 ring-1 ring-black/5"
+            >
+              <p className="text-[10px] font-semibold tracking-[0.2em] text-zinc-500 uppercase">
+                {item.label}
+              </p>
+              <p className="mt-2 text-base font-semibold tracking-tight text-zinc-950 sm:text-lg">
+                {item.value}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* 空状态 */}
       {!entries.length ? (
-        <Card className="rounded-[2rem] border-2 border-dashed border-border/50 bg-card/30 py-16 backdrop-blur-md">
+        <Card className="rounded-[2.4rem] border border-dashed border-black/8 bg-white/82 py-16 shadow-none backdrop-blur-md">
           <CardContent className="flex flex-col items-center gap-5 px-6 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary shadow-inner">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-100 text-zinc-500">
               <ImageIcon className="h-8 w-8" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-bold tracking-tight text-foreground">
-                还没有上传记录
+              <h3 className="text-2xl font-semibold tracking-tight text-zinc-950">
+                还没有照片
               </h3>
-              <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-                在上方完成第一组照片归档后，这里会立刻生成属于你的展览画廊。
+              <p className="max-w-md text-sm leading-7 text-zinc-500">
+                从上方拖进第一组照片开始，这里会慢慢长成一面只属于你的日常照片墙。
               </p>
             </div>
           </CardContent>
         </Card>
       ) : (
-        /* 列表渲染 */
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {entries.map((entry) => {
             const heroImage = entry.images[0];
-            const secondaryImages = entry.images.slice(1, 4);
-            const remainingCount = Math.max(entry.images.length - 4, 0);
+            const supportingImages = entry.images.slice(1, 5);
+            const remainingCount = Math.max(entry.images.length - supportingImages.length - 1, 0);
 
             return (
-              <Card
+              <article
                 key={entry.id}
-                className="group/card overflow-hidden rounded-[2rem] border border-border/40 bg-card/60 p-0 shadow-lg shadow-black/5 backdrop-blur-xl transition-all hover:shadow-2xl hover:shadow-primary/5"
+                className="group rounded-[2.6rem] bg-white p-3 shadow-[0_22px_90px_-52px_rgba(15,23,42,0.28)] ring-1 ring-black/5 sm:p-4"
               >
-                <CardContent className="p-0">
-                  <div className="grid gap-0 lg:grid-cols-[1.5fr_minmax(20rem,1fr)]">
-                    
-                    {/* 左侧：图片排版区 */}
-                    <div className="p-5 sm:p-6 lg:p-8">
-                      <div className="space-y-3">
-                        {/* 主图 Hero Image */}
-                        <div className="group/hero relative overflow-hidden rounded-[1.25rem] border border-border/50 bg-muted/20">
-                          <div className="relative aspect-[16/10]">
-                            <Image
-                              src={heroImage.src}
-                              alt={heroImage.alt}
-                              fill
-                              sizes="(min-width: 1280px) 48vw, (min-width: 1024px) 54vw, 100vw"
-                              className="object-cover transition-transform duration-700 group-hover/hero:scale-105"
-                            />
-                          </div>
+                <div className="grid gap-3 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.75fr)]">
+                  <div className="relative min-h-[25rem] overflow-hidden rounded-[2rem] bg-zinc-100 sm:min-h-[34rem]">
+                    <Image
+                      src={heroImage.src}
+                      alt={heroImage.alt}
+                      fill
+                      sizes="(min-width: 1280px) 58vw, (min-width: 1024px) 60vw, 100vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                    />
 
-                          {/* 悬浮标签（为了图片上的可见性，保持深色/毛玻璃背景） */}
-                          <div className="absolute left-4 top-4">
-                            <Badge className="rounded-full border-0 bg-black/40 px-3 py-1.5 text-[11px] font-semibold tracking-widest text-white backdrop-blur-md uppercase shadow-sm">
-                              {entry.images.length} Photos
-                            </Badge>
-                          </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/8 to-transparent" />
 
-                          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 bg-gradient-to-t from-black/80 via-black/30 to-transparent px-5 py-4 text-white opacity-90 transition-opacity group-hover/hero:opacity-100">
-                            <p className="truncate text-sm font-medium">{heroImage.filename}</p>
-                            <span className="text-xs font-mono text-white/80">
-                              {formatBytes(heroImage.size)}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* 副图 Secondary Images */}
-                        {secondaryImages.length > 0 ? (
-                          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-                            {secondaryImages.map((image, imageIndex) => (
-                              <div
-                                key={image.id}
-                                className="group/sub relative overflow-hidden rounded-[1rem] border border-border/50 bg-muted/20"
-                              >
-                                <div className="relative aspect-[4/3]">
-                                  <Image
-                                    src={image.src}
-                                    alt={image.alt}
-                                    fill
-                                    sizes="(min-width: 1024px) 16vw, 40vw"
-                                    className="object-cover transition-transform duration-700 group-hover/sub:scale-110"
-                                  />
-                                </div>
-
-                                {remainingCount > 0 && imageIndex === secondaryImages.length - 1 && (
-                                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-xl font-medium text-white backdrop-blur-sm transition-colors hover:bg-black/40 cursor-pointer">
-                                    +{remainingCount}
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="flex min-h-24 items-center justify-center rounded-[1rem] border border-dashed border-border/60 bg-muted/10 text-sm font-medium text-muted-foreground">
-                            仅上传了 1 张主图
-                          </div>
-                        )}
-                      </div>
+                    <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2 sm:left-5 sm:top-5">
+                      <span className="rounded-full bg-white/84 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-zinc-900 uppercase backdrop-blur">
+                        {formatDateTimeLabel(entry.createdAt)}
+                      </span>
+                      <span className="rounded-full bg-black/35 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-white uppercase backdrop-blur">
+                        {entry.images.length} Photos
+                      </span>
                     </div>
 
-                    {/* 右侧：信息与描述区 */}
-                    <div className="flex flex-col border-t border-border/40 bg-muted/5 px-6 py-6 lg:border-l lg:border-t-0 lg:px-8 lg:py-8">
-                      <div className="flex flex-wrap items-center gap-2.5">
-                        <Badge className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-semibold tracking-widest text-primary uppercase shadow-none">
-                          {entry.exhibitionDate
-                            ? formatDateLabel(entry.exhibitionDate)
-                            : "展期待定"}
-                        </Badge>
-                        {entry.venue && (
-                          <Badge
-                            variant="outline"
-                            className="rounded-full border-border/60 bg-background/50 px-3 py-1 text-[11px] font-medium text-muted-foreground shadow-none"
-                          >
-                            {entry.venue}
-                          </Badge>
-                        )}
-                      </div>
-
-                      <div className="mt-6">
-                        <CardTitle className="font-[family:var(--font-display)] text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                          {entry.exhibitionName}
-                        </CardTitle>
-                      </div>
-
-                      <div className="mt-8 grid gap-2 rounded-2xl bg-muted/30 p-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                        <div className="flex flex-col justify-center rounded-xl bg-background/50 px-3.5 py-3 shadow-sm">
-                          <p className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
-                            上传时间
-                          </p>
-                          <p className="mt-1 text-sm font-medium text-foreground">
-                            {formatDateTimeLabel(entry.createdAt)}
-                          </p>
-                        </div>
-                        <div className="flex flex-col justify-center rounded-xl bg-background/50 px-3.5 py-3 shadow-sm">
-                          <p className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
-                            图片数量
-                          </p>
-                          <p className="mt-1 text-sm font-medium text-foreground">
-                            {entry.images.length} 张
-                          </p>
-                        </div>
-                        <div className="flex flex-col justify-center rounded-xl bg-background/50 px-3.5 py-3 shadow-sm">
-                          <p className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase">
-                            场馆位置
-                          </p>
-                          <p className="mt-1 truncate text-sm font-medium text-foreground">
-                            {entry.venue || "未填写"}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="mt-6 flex-1 rounded-2xl border border-border/50 bg-gradient-to-br from-background/80 to-muted/20 px-5 py-5 shadow-inner">
-                        <p className="text-[10px] font-bold tracking-[0.2em] text-primary/80 uppercase">
-                          Curator Note
-                        </p>
-                        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                          {entry.curatorNote || "这组上传未填写展览说明，保留为纯图片归档。"}
-                        </p>
-                      </div>
+                    <div className="absolute right-4 top-4 sm:right-5 sm:top-5">
+                      <GalleryEntryActions entry={entry} />
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                    {supportingImages.length ? (
+                      <>
+                        {supportingImages.map((image, imageIndex) => {
+                          const isLastVisible =
+                            imageIndex === supportingImages.length - 1 && remainingCount > 0;
+
+                          return (
+                            <div
+                              key={image.id}
+                              className="relative min-h-[11rem] overflow-hidden rounded-[1.6rem] bg-zinc-100 sm:min-h-[13rem] lg:min-h-[15rem]"
+                            >
+                              <Image
+                                src={image.src}
+                                alt={image.alt}
+                                fill
+                                sizes="(min-width: 1280px) 22vw, (min-width: 640px) 40vw, 100vw"
+                                className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                              />
+
+                              {isLastVisible ? (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/38 text-2xl font-semibold tracking-tight text-white backdrop-blur-[1px]">
+                                  +{remainingCount}
+                                </div>
+                              ) : null}
+                            </div>
+                          );
+                        })}
+                      </>
+                    ) : (
+                      <div className="flex min-h-[14rem] flex-col items-center justify-center rounded-[1.8rem] bg-zinc-50 px-6 text-center ring-1 ring-black/5">
+                        <p className="text-sm font-medium text-zinc-900">这组只有 1 张主图</p>
+                        <p className="mt-2 text-sm leading-6 text-zinc-500">
+                          需要补照片或调整封面时，直接点右上角的管理。
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </article>
             );
           })}
         </div>
